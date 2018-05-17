@@ -149,3 +149,11 @@ To keep any VMs around for debugging purposes, use the following commands instea
 
   BEAKER_provision=yes BEAKER_destroy=no bundle exec rake beaker
   bundle exec rake beaker:ssh
+
+To regenerate the `README.md` for a puppet module, run the following for the module's directory:
+
+::
+
+  bundle exec rake readme:generate
+
+When using `bundle` it may be useful to set the `BUNDLE_DIR` environment variable to a fixed location instead of using the default `.bundle` as specified in each module's `Makefile`. This will prevent bundle dependencies from being installed multiple times.
