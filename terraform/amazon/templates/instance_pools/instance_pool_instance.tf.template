@@ -1,4 +1,6 @@
 {{/* vim: set ft=tf: */ -}}
+{{ $WingDevMode := .WingDevMode -}}
+{{ with .InstancePool -}}
 {{ $instancePool := . -}}
 
 data "template_file" "{{.TFName}}_user_data" {
@@ -19,9 +21,11 @@ data "template_file" "{{.TFName}}_user_data" {
 
     puppet_tar_gz_bucket_path = "${var.secrets_bucket}/${aws_s3_bucket_object.puppet-tar-gz.key}"
 
+{{ if $WingDevMode -}}
     # These are only used in the template when running in Wing dev mode
     wing_binary_path          = "${var.secrets_bucket}/${aws_s3_bucket_object.wing-binary.key}"
     wing_version              = "${var.wing_version}"
+{{ end -}}
 
     vault_token = "${tarmak_vault_instance_role.{{.Role.Name}}.init_token}"
     vault_ca    = "${base64encode(var.vault_ca)}"
@@ -251,6 +255,8 @@ resource "aws_route53_record" "{{.TFName}}-exporter-srv" {
     "${formatlist("1 10 9115 %s.%s", aws_route53_record.{{.TFName}}.*.name, var.private_zone)}"
   ]
 }
+{{ end -}}
+
 {{ end -}}
 
 {{ end -}}
