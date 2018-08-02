@@ -3,6 +3,10 @@ data "template_file" "bastion_user_data" {
 
   vars {
     fqdn = "bastion.${var.public_zone}"
+{{ if .WingDevMode -}}
+    wing_binary_path       = "${var.secrets_bucket}/${data.template_file.stack_name.rendered}/wing-${var.wing_hash}"
+    wing_hash              = "${var.wing_hash}"
+{{- end }}
   }
 }
 
@@ -31,6 +35,9 @@ resource "aws_instance" "bastion" {
   subnet_id              = "${var.public_subnet_ids[0]}"
   key_name               = "${var.key_name}"
   vpc_security_group_ids = ["${aws_security_group.bastion.0.id}"]
+{{- if .WingDevMode }}
+  iam_instance_profile = "${aws_iam_instance_profile.bastion.name}"
+{{- end }}
 
   root_block_device = {
     volume_type = "gp2"

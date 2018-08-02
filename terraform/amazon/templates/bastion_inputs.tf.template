@@ -23,3 +23,6 @@ variable "bastion_admin_cidrs" {
 variable "public_zone_id" {}
 # data.terraform_remote_state.network.private_zone_id.0
 variable "private_zone_id" {}
+{{- if .WingDevMode }}
+variable "secrets_bucket" {}
+{{- end }}

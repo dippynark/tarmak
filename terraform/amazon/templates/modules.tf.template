@@ -68,6 +68,9 @@ module "bastion" {
   bastion_admin_cidrs = ["${var.bastion_admin_cidrs}"]
   public_zone_id = "${module.state.public_zone_id}"
   private_zone_id = "${module.network.private_zone_id[0]}"
+{{- if .WingDevMode }}
+  secrets_bucket = "${module.state.secrets_bucket[0]}"
+{{- end }}
 }
 
 {{ if .JenkinsInstall -}}

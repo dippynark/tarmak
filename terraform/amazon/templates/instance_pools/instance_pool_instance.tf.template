@@ -23,8 +23,8 @@ data "template_file" "{{.TFName}}_user_data" {
 
 {{ if $WingDevMode -}}
     # These are only used in the template when running in Wing dev mode
-    wing_binary_path          = "${var.secrets_bucket}/${aws_s3_bucket_object.wing-binary.key}"
-    wing_version              = "${var.wing_version}"
+    wing_binary_path     = "${var.secrets_bucket}/${data.template_file.stack_name.rendered}/wing-${var.wing_hash}"
+    wing_hash            = "${var.wing_hash}"
 {{ end -}}
 
     vault_token = "${tarmak_vault_instance_role.{{.Role.Name}}.init_token}"

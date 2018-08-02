@@ -1,0 +1,26 @@
+{{ if .WingDevMode -}}
+resource "aws_iam_role" "bastion" {
+  name               = "${data.template_file.stack_name.rendered}-bastion"
+  path               = "/bastion-${var.environment}/"
+  assume_role_policy = "${file("${path.module}/templates/role.json")}"
+}
+
+resource "aws_iam_instance_profile" "bastion" {
+  name  = "${data.template_file.stack_name.rendered}-bastion"
+  role  = "${aws_iam_role.bastion.name}"
+}
+
+resource "aws_iam_role_policy" "bastion" {
+  name   = "${data.template_file.stack_name.rendered}-bastion"
+  role   = "${aws_iam_role.bastion.name}"
+  policy = "${data.template_file.bastion_policy.rendered}"
+}
+
+data "template_file" "bastion_policy" {
+  template = "${file("${path.module}/templates/bastion_role_policy.json")}"
+
+  vars {
+    wing_binary_path = "${var.secrets_bucket}/${data.template_file.stack_name.rendered}/wing-${var.wing_hash}"
+  }
+}
+{{- end }}

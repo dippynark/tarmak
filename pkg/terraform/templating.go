@@ -7,6 +7,7 @@ import (
 	"io"
 	"net"
 	"os"
+	"path"
 	"path/filepath"
 	"text/template"
 
@@ -129,24 +130,28 @@ func (t *terraformTemplate) Generate() error {
 	}
 
 	for _, tmpl := range []struct {
-		name, target string
+		name, target, extension string
 	}{
-		{"modules", "modules"},
-		{"inputs", "inputs"},
-		{"outputs", "outputs"},
-		{"providers", "providers"},
-		{"jenkins_elb", "modules/jenkins/jenkins_elb"},
-		{"wing_s3", "modules/kubernetes/wing_s3"},
-		{"vault_instances", "modules/vault/vault_instances"},
+		{"modules", "modules", "tf"},
+		{"inputs", "inputs", "tf"},
+		{"outputs", "outputs", "tf"},
+		{"providers", "providers", "tf"},
+		{"jenkins_elb", "modules/jenkins/jenkins_elb", "tf"},
+		{"wing_s3", "modules/bastion/wing_s3", "tf"},
+		{"wing_variables", "modules/bastion/wing_variables", "tf"},
+		{"wing_variables", "modules/kubernetes/wing_variables", "tf"},
+		{"vault_instances", "modules/vault/vault_instances", "tf"},
+		{"bastion", "modules/bastion/bastion", "tf"},
+		{"bastion_iam", "modules/bastion/bastion_iam", "tf"},
+		{"bastion_inputs", "modules/bastion/inputs", "tf"},
+		{"puppet_agent_user_data", "modules/kubernetes/templates/puppet_agent_user_data", "yaml"},
+		{"bastion_user_data", "modules/bastion/templates/bastion_user_data", "yaml"},
 	} {
-		if err := t.generateTemplate(tmpl.name, tmpl.target, "tf"); err != nil {
+		if err := t.generateTemplate(tmpl.name, tmpl.target, tmpl.extension); err != nil {
 			result = multierror.Append(result, err)
 		}
 	}
 
-	if err := t.generateTemplate("puppet_agent_user_data", "modules/kubernetes/templates/puppet_agent_user_data", "yaml"); err != nil {
-		result = multierror.Append(result, err)
-	}
 	if err := t.generateTerraformVariables(); err != nil {
 		result = multierror.Append(result, err)
 	}
@@ -227,11 +232,19 @@ func (t *terraformTemplate) generateTemplate(name string, target string, fileTyp
 
 	mainTemplate := templatesParsed.Lookup(fmt.Sprintf("%s.%s.template", name, fileType))
 
+	fullTarget := filepath.Join(
+		t.destDir,
+		fmt.Sprintf("%s.%s", target, fileType),
+	)
+	// create containing directory if it doesn't exist
+	if _, err := os.Stat(path.Dir(fullTarget)); os.IsNotExist(err) {
+		err = os.MkdirAll(path.Dir(fullTarget), 0755)
+		if err != nil {
+			panic(err)
+		}
+	}
 	file, err := os.OpenFile(
-		filepath.Join(
-			t.destDir,
-			fmt.Sprintf("%s.%s", target, fileType),
-		),
+		fullTarget,
 		os.O_RDWR|os.O_CREATE|os.O_TRUNC,
 		0644,
 	)
