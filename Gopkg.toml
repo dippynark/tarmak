@@ -92,7 +92,7 @@ required = [
 
 [[constraint]]
   name = "github.com/hashicorp/terraform"
-  version = "0.11.7"
+  version = "0.11.8"
 
 [[constraint]]
   name = "github.com/terraform-providers/terraform-provider-aws"

@@ -536,6 +536,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/google/go-querystring"
+  packages = ["query"]
+  revision = "53e6ce116135b80d037921a7fdd5138cf32d7a8a"
+
+[[projects]]
+  branch = "master"
   name = "github.com/google/gofuzz"
   packages = ["."]
   revision = "24818f796faf91cd76ec7bddd72458fbced7a6c1"
@@ -706,6 +712,18 @@
   revision = "b1a1dbde6fdc11e3ae79efd9039009e22d4ae240"
 
 [[projects]]
+  name = "github.com/hashicorp/go-slug"
+  packages = ["."]
+  revision = "cc9d70694ef317c2e6443e20b7927363d69c8b1e"
+  version = "v0.1.0"
+
+[[projects]]
+  name = "github.com/hashicorp/go-tfe"
+  packages = ["."]
+  revision = "dffc938c010479f92b9ff565f78534861fa8bb76"
+  version = "v0.1.2"
+
+[[projects]]
   branch = "master"
   name = "github.com/hashicorp/go-uuid"
   packages = ["."]
@@ -813,6 +831,7 @@
     "backend/init",
     "backend/legacy",
     "backend/local",
+    "backend/remote",
     "backend/remote-state/azure",
     "backend/remote-state/consul",
     "backend/remote-state/etcdv3",
@@ -876,8 +895,8 @@
     "tfdiags",
     "version"
   ]
-  revision = "41e50bd32a8825a84535e353c3674af8ce799161"
-  version = "v0.11.7"
+  revision = "6dfc4d748de9cda23835bc5704307ed45e839622"
+  version = "v0.11.8"
 
 [[projects]]
   name = "github.com/hashicorp/vault"
@@ -1348,6 +1367,12 @@
   ]
   revision = "f187355171c936ac84a82793659ebb4936bc1c23"
   version = "v1.3.0"
+
+[[projects]]
+  name = "github.com/svanharmelen/jsonapi"
+  packages = ["."]
+  revision = "46d3ced0434461be12e555852e2f1a9ed382e139"
+  version = "1.0.0"
 
 [[projects]]
   name = "github.com/terraform-providers/terraform-provider-aws"
@@ -2075,6 +2100,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "31fcb889e654aad64956d35d9c816352d583e517646af9ad23ca16a77727d2d4"
+  inputs-digest = "15d91f0c8cac1912737a291bb5aaba597be4b5ea58c19da0ba37bb1894000f52"
   solver-name = "gps-cdcl"
   solver-version = 1
